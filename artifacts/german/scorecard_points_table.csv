@@ -1,0 +1,65 @@
+feature,bin,n,bad_rate,woe,points
+status,... < 100 DM,160,0.5,-0.8457,17.2
+status,... >= 200 DM / salary for at least 1 year,32,0.2188,0.3781,45.3
+status,0 <= ... < 200 DM,161,0.3975,-0.4325,26.7
+status,no checking account,247,0.1174,1.1567,63.3
+credit_history,all credits at this bank paid back duly,31,0.5806,-1.1608,12.8
+credit_history,critical account/other credits existing,185,0.1514,0.8638,54.4
+credit_history,delay in paying off in the past,55,0.3273,-0.1391,33.8
+credit_history,existing credits paid back duly till now,310,0.3355,-0.1646,33.3
+credit_history,no credits taken/all credits paid back duly,19,0.6316,-1.3565,8.8
+duration,"(-inf, 9.0]",88,0.125,1.0622,59.9
+duration,"(12.0, 14.0]",6,0.1667,0.4536,46.6
+duration,"(14.0, 18.0]",101,0.3069,-0.0401,35.8
+duration,"(18.0, 24.0]",132,0.3485,-0.225,31.7
+duration,"(24.0, 36.0]",83,0.3735,-0.3349,29.3
+duration,"(36.0, inf]",56,0.5,-0.8457,18.1
+duration,"(9.0, 12.0]",134,0.2388,0.3029,43.3
+amount,"(-inf, 996.0]",75,0.32,-0.1028,33.9
+amount,"(1344.75, 1641.875]",75,0.16,0.7796,57.6
+amount,"(1641.875, 2281.0]",75,0.36,-0.2783,29.2
+amount,"(2281.0, 2997.875]",75,0.2267,0.3611,46.3
+amount,"(2997.875, 4042.0]",76,0.2105,0.4536,48.8
+amount,"(4042.0, 6688.625]",74,0.3919,-0.4124,25.6
+amount,"(6688.625, inf]",75,0.4533,-0.661,18.9
+amount,"(996.0, 1344.75]",75,0.28,0.0844,38.9
+savings,... < 100 DM,353,0.3626,-0.2833,29.8
+savings,... >= 1000 DM,27,0.0741,1.4767,72.5
+savings,100 <= ... < 500 DM,74,0.3108,-0.0611,35.2
+savings,500 <= ... < 1000 DM,37,0.1892,0.5571,50.2
+savings,unknown/no savings account,109,0.1835,0.6281,51.9
+other_installment_plans,bank,82,0.5244,-0.9422,16.4
+other_installment_plans,none,491,0.2607,0.1941,40.8
+other_installment_plans,stores,27,0.3333,-0.1792,32.8
+purpose,OTHER,28,0.3214,-0.1266,33.2
+purpose,car (new),159,0.3648,-0.2947,28.7
+purpose,car (used),68,0.2059,0.4783,49.6
+purpose,domestic appliances,156,0.2179,0.4214,48.0
+purpose,others,64,0.3594,-0.277,29.2
+purpose,radio/television,103,0.3107,-0.0573,35.1
+purpose,retraining,22,0.4545,-0.6714,18.5
+property,building society savings agreement/life insurance,126,0.2857,0.0623,37.0
+property,car or other,196,0.3214,-0.1027,36.1
+property,real estate,175,0.2114,0.4608,39.0
+property,unknown/no property,103,0.4272,-0.5552,33.8
+employment_duration,... < 1 year,104,0.4231,-0.5386,25.1
+employment_duration,... >= 7 years,162,0.2654,0.1648,40.2
+employment_duration,1 <= ... < 4 years,197,0.2741,0.1224,39.3
+employment_duration,4 <= ... < 7 years,108,0.25,0.2407,41.8
+employment_duration,unemployed,29,0.4138,-0.5092,25.7
+housing,for free,71,0.3944,-0.4229,31.3
+housing,own,418,0.2632,0.181,38.9
+housing,rent,111,0.3784,-0.3539,32.2
+installment_rate,"(-inf, 1.5]",86,0.2326,0.3311,50.3
+installment_rate,"(1.5, 2.5]",136,0.25,0.2432,46.7
+installment_rate,"(2.5, 3.5]",93,0.3011,-0.0136,36.1
+installment_rate,"(3.5, inf]",285,0.3439,-0.202,28.3
+job,OTHER,10,0.4,-0.478,34.2
+job,management/self-employed/highly qualified employee/officer,87,0.3563,-0.2615,35.3
+job,skilled employee/official,385,0.2753,0.1191,37.3
+job,unskilled - resident,118,0.3305,-0.1463,35.9
+telephone,no,351,0.3276,-0.129,32.6
+telephone,yes,249,0.261,0.1899,42.7
+other_debtors,co-applicant,24,0.4583,-0.6854,24.1
+other_debtors,guarantor,26,0.2692,0.1098,38.7
+other_debtors,none,550,0.2945,0.0259,37.1

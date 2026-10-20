@@ -1,0 +1,330 @@
+{
+  "scorecard": {
+    "auc": 0.7885,
+    "gini": 0.5769,
+    "ks": 0.5286,
+    "brier": 0.1613,
+    "business": {
+      "cutoff_pd": 0.1788,
+      "approval_rate": 0.4,
+      "bad_rate_approved": 0.1,
+      "expected_profit_test": 11567.0,
+      "profit_if_approve_all": -129251.0
+    }
+  },
+  "ml": {
+    "auc": 0.7931,
+    "gini": 0.5862,
+    "ks": 0.5095,
+    "brier": 0.1626,
+    "business": {
+      "cutoff_pd": 0.1596,
+      "approval_rate": 0.31,
+      "bad_rate_approved": 0.0806,
+      "expected_profit_test": 11974.0,
+      "profit_if_approve_all": -129251.0
+    }
+  },
+  "psi_ml_score_train_vs_test": 0.0458,
+  "iv": [
+    {
+      "feature": "status",
+      "iv": 0.6888,
+      "strength": "suspicious (check leakage)"
+    },
+    {
+      "feature": "credit_history",
+      "iv": 0.3549,
+      "strength": "strong"
+    },
+    {
+      "feature": "duration",
+      "iv": 0.2544,
+      "strength": "medium"
+    },
+    {
+      "feature": "amount",
+      "iv": 0.1992,
+      "strength": "medium"
+    },
+    {
+      "feature": "savings",
+      "iv": 0.1989,
+      "strength": "medium"
+    },
+    {
+      "feature": "other_installment_plans",
+      "iv": 0.1697,
+      "strength": "medium"
+    },
+    {
+      "feature": "purpose",
+      "iv": 0.1194,
+      "strength": "medium"
+    },
+    {
+      "feature": "property",
+      "iv": 0.1187,
+      "strength": "medium"
+    },
+    {
+      "feature": "employment_duration",
+      "iv": 0.0913,
+      "strength": "weak"
+    },
+    {
+      "feature": "housing",
+      "iv": 0.0698,
+      "strength": "weak"
+    },
+    {
+      "feature": "installment_rate",
+      "iv": 0.0477,
+      "strength": "weak"
+    },
+    {
+      "feature": "job",
+      "iv": 0.0283,
+      "strength": "weak"
+    },
+    {
+      "feature": "telephone",
+      "iv": 0.0244,
+      "strength": "weak"
+    },
+    {
+      "feature": "other_debtors",
+      "iv": 0.0228,
+      "strength": "weak"
+    },
+    {
+      "feature": "number_credits",
+      "iv": 0.0158,
+      "strength": "useless"
+    },
+    {
+      "feature": "present_residence",
+      "iv": 0.0049,
+      "strength": "useless"
+    },
+    {
+      "feature": "people_liable",
+      "iv": 0.0035,
+      "strength": "useless"
+    }
+  ],
+  "scorecard_features": [
+    "status",
+    "credit_history",
+    "duration",
+    "amount",
+    "savings",
+    "other_installment_plans",
+    "purpose",
+    "property",
+    "employment_duration",
+    "housing",
+    "installment_rate",
+    "job",
+    "telephone",
+    "other_debtors"
+  ],
+  "dataset": {
+    "name": "german",
+    "title": "German credit (1,000 real loans, used for the fairness audit)",
+    "rows": 1000,
+    "bad_rate": 0.3
+  },
+  "shap_importance": {
+    "status": 0.6223,
+    "duration": 0.3474,
+    "credit_history": 0.2796,
+    "savings": 0.2156,
+    "installment_rate": 0.2146,
+    "purpose": 0.2139,
+    "amount": 0.174,
+    "other_installment_plans": 0.1688,
+    "telephone": 0.1432,
+    "employment_duration": 0.0922,
+    "property": 0.0698,
+    "housing": 0.0684,
+    "job": 0.0239,
+    "present_residence": 0.0159,
+    "number_credits": 0.0025,
+    "other_debtors": 0.0,
+    "people_liable": 0.0
+  },
+  "fairness": [
+    {
+      "attribute": "sex",
+      "group": "female",
+      "n": 61,
+      "approval_rate": 0.311,
+      "approval_rate_if_repaid": 0.415,
+      "adverse_impact_ratio": 1.0,
+      "passes_4_5ths_rule": true
+    },
+    {
+      "attribute": "sex",
+      "group": "male",
+      "n": 139,
+      "approval_rate": 0.309,
+      "approval_rate_if_repaid": 0.404,
+      "adverse_impact_ratio": 0.993,
+      "passes_4_5ths_rule": true
+    },
+    {
+      "attribute": "age_group",
+      "group": "25_plus",
+      "n": 156,
+      "approval_rate": 0.333,
+      "approval_rate_if_repaid": 0.422,
+      "adverse_impact_ratio": 1.0,
+      "passes_4_5ths_rule": true
+    },
+    {
+      "attribute": "age_group",
+      "group": "under_25",
+      "n": 44,
+      "approval_rate": 0.227,
+      "approval_rate_if_repaid": 0.333,
+      "adverse_impact_ratio": 0.682,
+      "passes_4_5ths_rule": false
+    },
+    {
+      "attribute": "foreign_worker",
+      "group": "no",
+      "n": 6,
+      "approval_rate": 0.333,
+      "approval_rate_if_repaid": 0.4,
+      "adverse_impact_ratio": 1.0,
+      "passes_4_5ths_rule": true
+    },
+    {
+      "attribute": "foreign_worker",
+      "group": "yes",
+      "n": 194,
+      "approval_rate": 0.309,
+      "approval_rate_if_repaid": 0.407,
+      "adverse_impact_ratio": 0.928,
+      "passes_4_5ths_rule": true
+    }
+  ],
+  "agreement_rate": 0.87,
+  "example_notices": [
+    {
+      "id": 1,
+      "decision": "DECLINE",
+      "pd": 0.4804103889787032,
+      "score": 493.0,
+      "shap_reasons": [
+        "status",
+        "duration",
+        "amount",
+        "credit_history"
+      ],
+      "scorecard_reasons": [
+        "savings",
+        "duration",
+        "status",
+        "amount"
+      ],
+      "notice": "Application 1\nDecision: DECLINED\nEstimated probability of default: 48.0%   Scorecard points: 493\n\nWe were unable to approve your application. The principal reasons were:\n  1. Current account balance status\n  2. Long loan duration\n  3. Requested loan amount is high\n  4. Past repayment record\n\nNo small change to the loan request alone would change this decision.\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 739,
+      "decision": "DECLINE",
+      "pd": 0.7151103484576372,
+      "score": 437.0,
+      "shap_reasons": [
+        "status",
+        "duration",
+        "amount",
+        "credit_history"
+      ],
+      "scorecard_reasons": [
+        "credit_history",
+        "savings",
+        "status",
+        "amount"
+      ],
+      "notice": "Application 739\nDecision: DECLINED\nEstimated probability of default: 71.5%   Scorecard points: 437\n\nWe were unable to approve your application. The principal reasons were:\n  1. Current account balance status\n  2. Long loan duration\n  3. Requested loan amount is high\n  4. Past repayment record\n\nNo small change to the loan request alone would change this decision.\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 89,
+      "decision": "DECLINE",
+      "pd": 0.3862356864150923,
+      "score": 467.0,
+      "shap_reasons": [
+        "status",
+        "credit_history",
+        "installment_rate",
+        "telephone"
+      ],
+      "scorecard_reasons": [
+        "status",
+        "credit_history",
+        "savings",
+        "installment_rate"
+      ],
+      "notice": "Application 89\nDecision: DECLINED\nEstimated probability of default: 38.6%   Scorecard points: 467\n\nWe were unable to approve your application. The principal reasons were:\n  1. Current account balance status\n  2. Past repayment record\n  3. Instalment is a high share of income\n  4. No registered telephone\n\nNo small change to the loan request alone would change this decision.\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 537,
+      "decision": "DECLINE",
+      "pd": 0.19425249372378184,
+      "score": 541.0,
+      "shap_reasons": [
+        "status",
+        "savings",
+        "duration",
+        "installment_rate"
+      ],
+      "scorecard_reasons": [
+        "savings",
+        "status",
+        "duration",
+        "purpose"
+      ],
+      "notice": "Application 537\nDecision: DECLINED\nEstimated probability of default: 19.4%   Scorecard points: 541\n\nWe were unable to approve your application. The principal reasons were:\n  1. Current account balance status\n  2. Low savings\n  3. Long loan duration\n  4. Instalment is a high share of income\n\nWhat would most likely change the outcome if you re-apply:\n  - Loan duration: from 18 months to 15 months\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 647,
+      "decision": "APPROVE",
+      "pd": 0.08974099255909941,
+      "score": 586.0,
+      "shap_reasons": [
+        "purpose",
+        "credit_history",
+        "telephone",
+        "number_credits"
+      ],
+      "scorecard_reasons": [
+        "savings",
+        "credit_history",
+        "purpose",
+        "duration"
+      ],
+      "notice": "Application 647\nDecision: APPROVED\nEstimated probability of default: 9.0%   Scorecard points: 586\n\nMain factors that still added risk (for the credit file):\n  1. Purpose of the loan\n  2. Past repayment record\n  3. No registered telephone\n  4. Number of existing credits"
+    },
+    {
+      "id": 297,
+      "decision": "APPROVE",
+      "pd": 0.1439069818682503,
+      "score": 537.0,
+      "shap_reasons": [
+        "purpose",
+        "credit_history",
+        "installment_rate",
+        "telephone"
+      ],
+      "scorecard_reasons": [
+        "installment_rate",
+        "credit_history",
+        "purpose",
+        "savings"
+      ],
+      "notice": "Application 297\nDecision: APPROVED\nEstimated probability of default: 14.4%   Scorecard points: 537\n\nMain factors that still added risk (for the credit file):\n  1. Purpose of the loan\n  2. Past repayment record\n  3. Instalment is a high share of income\n  4. No registered telephone"
+    }
+  ]
+}

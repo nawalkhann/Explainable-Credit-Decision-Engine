@@ -1,0 +1,149 @@
+<title>Explainable Credit Decision Engine</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, a ledger-style figures strip, then evidence sections */
+:root {
+  --bg: #f6f7f5; --surface: #ffffff; --fg: #17201d; --muted: #5c6763; --line: #dfe3e0;
+  --ml: #1f5fbf; --sc: #b86e0a; --act: #8c979a; --ok: #1b7a4b; --flag: #b3261e;
+  --ok-bg: #e3f2e9; --flag-bg: #fbe7e5;
+  --display: "Fraunces", Georgia, serif; --body: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121715; --surface: #1a211e; --fg: #e6ebe8; --muted: #9aa5a0; --line: #2c3632;
+  --ml: #6ea2f0; --sc: #e2a24a; --act: #6b7578; --ok: #5fcf93; --flag: #f08a82;
+  --ok-bg: #173325; --flag-bg: #3a1c1a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121715; --surface: #1a211e; --fg: #e6ebe8; --muted: #9aa5a0; --line: #2c3632;
+  --ml: #6ea2f0; --sc: #e2a24a; --act: #6b7578; --ok: #5fcf93; --flag: #f08a82;
+  --ok-bg: #173325; --flag-bg: #3a1c1a; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 880px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 44px; }
+h1, h2 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+h2 { font-size: 23px; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lede { color: var(--muted); font-size: 17px; }
+header, section { display: grid; gap: 14px; min-width: 0; }
+.figures { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--fg); border-bottom: 1px solid var(--line); }
+.fig { padding: 14px 14px 16px 0; display: grid; gap: 4px; align-content: start; }
+.fig + .fig { padding-left: 14px; border-left: 1px solid var(--line); }
+.fig b { font-family: var(--mono); font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.fig span { font-size: 13px; color: var(--muted); }
+@media (max-width: 640px) { .figures { grid-template-columns: 1fr 1fr; } .fig:nth-child(3) { border-left: 0; padding-left: 0; } .fig:nth-child(n+3) { border-top: 1px solid var(--line); } }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.win { color: var(--ml); font-weight: 600; }
+.key { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); margin-right: 14px; }
+.key i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+.two > div { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.bar-row { display: grid; grid-template-columns: 9.5em 1fr 3.2em; gap: 8px; align-items: center; font-size: 13px; }
+.bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { height: 10px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bar { display: block; height: 100%; }
+.bar.ml, .b-ml { background: var(--ml); fill: var(--ml); }
+.bar.sc { background: var(--sc); }
+.b-act { fill: var(--act); }
+.bar-val { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+svg { width: 100%; height: auto; display: block; max-width: 100%; }
+svg .grid { stroke: var(--line); stroke-width: 1; }
+svg .ax { fill: var(--muted); font-size: 11px; font-family: var(--mono); }
+pre { margin: 0; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--flag); padding: 16px 18px; font-family: var(--mono); font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+.pill { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 99px; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); }
+.pill.flag { background: var(--flag-bg); color: var(--flag); }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 70ch; }
+.note { font-size: 13px; color: var(--muted); }
+code { font-family: var(--mono); font-size: 13px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Loan decisioning · real Lending Club data</div>
+    <h1>Explainable Credit Decision Engine</h1>
+    <p class="lede">A champion scorecard and a challenger ML model scored side by side on 163,987 real consumer loans. Every approve or decline comes with a probability of default, scorecard points, the reasons in plain language and, for declines, what the applicant could change.</p>
+  </header>
+
+  <div class="figures" aria-label="Headline results on 32,798 held-out loans">
+    <div class="fig"><b>+{{UPLIFT}}</b><span>expected profit vs the scorecard at the same approval rate</span></div>
+    <div class="fig"><b>{{M_GINI}}</b><span>ML Gini, against {{S_GINI}} for the scorecard</span></div>
+    <div class="fig"><b>{{M_BAD}}</b><span>default rate among approved loans, against {{S_BAD}}</span></div>
+    <div class="fig"><b>{{PSI}}</b><span>score drift (PSI), train vs test; under 0.1 is stable</span></div>
+  </div>
+
+  <section>
+    <h2>Champion and challenger on the same loans</h2>
+    <p>Both models were trained on 60% of loans, the decline cut-off was set on 20% to maximise expected profit, and the figures below are from the final 20% they never saw.</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th class="num">Scorecard (WoE/IV)</th><th class="num">ML (LightGBM + SHAP)</th></tr></thead>
+      <tbody>
+        <tr><td>AUC</td><td class="num">{{S_AUC}}</td><td class="num win">{{M_AUC}}</td></tr>
+        <tr><td>Gini</td><td class="num">{{S_GINI}}</td><td class="num win">{{M_GINI}}</td></tr>
+        <tr><td>KS</td><td class="num">{{S_KS}}</td><td class="num win">{{M_KS}}</td></tr>
+        <tr><td>Approval rate at cut-off</td><td class="num">{{S_APP}}</td><td class="num">{{M_APP}}</td></tr>
+        <tr><td>Default rate among approved</td><td class="num">{{S_BAD}}</td><td class="num win">{{M_BAD}}</td></tr>
+        <tr><td>Expected profit on test loans</td><td class="num">{{S_PROF}}</td><td class="num win">{{M_PROF}}</td></tr>
+        <tr><td>Approving every applicant</td><td class="num">{{ALL_PROF}}</td><td class="num">{{ALL_PROF}}</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Profit assumes a repaid loan earns 12% of its amount and a defaulted loan loses 65%. The two models make the same decision on {{AGREE}} of applications; where they disagree is a natural queue for manual review.</p>
+  </section>
+
+  <section>
+    <h2>What each model looks at</h2>
+    <div class="two">
+      <div><div class="eyebrow">ML model · mean |SHAP|</div>{{SHAP}}</div>
+      <div><div class="eyebrow">Scorecard · Information Value</div>{{IV}}</div>
+    </div>
+    <p class="note">Lending Club's own interest rate is left out on purpose: it is the lender's existing risk price, so using it would copy their model. State of residence is left out as a possible proxy for protected groups.</p>
+  </section>
+
+  <section>
+    <h2>A decline that explains itself</h2>
+    <p>A real declined application from the test set. Reasons come from SHAP; the path to approval is a search over the fields an applicant can actually change.</p>
+    <pre>{{NOTICE}}</pre>
+  </section>
+
+  <section>
+    <h2>Predicted risk matches what happened</h2>
+    <div><span class="key"><i style="background:var(--ml)"></i>Predicted default rate</span><span class="key"><i style="background:var(--act)"></i>Actual default rate</span></div>
+    {{CAL}}
+    <p class="note">In every decile the predicted rate is within 1.4 points of the actual rate, so the probabilities can be used directly for pricing and provisioning.</p>
+  </section>
+
+  <section>
+    <h2>Fairness audit</h2>
+    <p>Run on the German credit data (1,000 real loans), which records sex, age and foreign-worker status. These fields are never model inputs; they are used only to check outcomes against the four-fifths rule.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Attribute</th><th>Group</th><th class="num">Test loans</th><th class="num">Approval rate</th><th class="num">Impact ratio</th><th>Four-fifths rule</th></tr></thead>
+      <tbody>{{FAIR}}</tbody>
+    </table></div>
+    <p class="note">Applicants under 25 are approved at 0.68 times the rate of older applicants and are flagged for review. The test set holds only 200 loans, so this demonstrates the check rather than proving a finding; HMDA mortgage data is the planned source for a full audit.</p>
+  </section>
+
+  <section>
+    <h2>What ships</h2>
+    <ul>
+      <li>A demo app to score one applicant, batch-score a CSV with reason codes, compare models and review fairness and drift.</li>
+      <li>A full scorecard points table (600 points at 50:1 odds, 20 points to double the odds) that a credit officer can read line by line.</li>
+      <li>Model-risk evidence: AUC, Gini, KS, calibration by decile, PSI, IV strength labels and the fairness audit.</li>
+      <li>A data adapter pattern: Home Credit, Freddie Mac, HMDA or a bank's own extract plug in with one loader.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Known limits</h2>
+    <ul>
+      <li>This Lending Club extract has no application date, so the test split is random rather than out-of-time. Freddie Mac data would allow a true out-of-time test.</li>
+      <li>Scorecard bins are quantile-based; production bins would also be forced to rise or fall steadily and be signed off by a credit officer.</li>
+      <li>Profit depends on the stated margin and loss assumptions, and reason wording needs compliance review before customer use.</li>
+    </ul>
+  </section>
+</div>

@@ -1,0 +1,7 @@
+attribute,group,n,approval_rate,approval_rate_if_repaid,adverse_impact_ratio,passes_4_5ths_rule
+sex,female,61,0.311,0.415,1.0,True
+sex,male,139,0.309,0.404,0.993,True
+age_group,25_plus,156,0.333,0.422,1.0,True
+age_group,under_25,44,0.227,0.333,0.682,False
+foreign_worker,no,6,0.333,0.4,1.0,True
+foreign_worker,yes,194,0.309,0.407,0.928,True

@@ -1,0 +1,243 @@
+{
+  "scorecard": {
+    "auc": 0.6689,
+    "gini": 0.3378,
+    "ks": 0.252,
+    "brier": 0.1411,
+    "business": {
+      "cutoff_pd": 0.1633,
+      "approval_rate": 0.4935,
+      "bad_rate_approved": 0.1103,
+      "expected_profit_test": 6461294.0,
+      "profit_if_approve_all": -14288156.0
+    }
+  },
+  "ml": {
+    "auc": 0.6876,
+    "gini": 0.3752,
+    "ks": 0.2753,
+    "brier": 0.139,
+    "business": {
+      "cutoff_pd": 0.16,
+      "approval_rate": 0.4908,
+      "bad_rate_approved": 0.1018,
+      "expected_profit_test": 7863563.0,
+      "profit_if_approve_all": -14288156.0
+    }
+  },
+  "psi_ml_score_train_vs_test": 0.0002,
+  "iv": [
+    {
+      "feature": "loan_to_income",
+      "iv": 0.1349,
+      "strength": "medium"
+    },
+    {
+      "feature": "term",
+      "iv": 0.1265,
+      "strength": "medium"
+    },
+    {
+      "feature": "revol_util",
+      "iv": 0.0779,
+      "strength": "weak"
+    },
+    {
+      "feature": "dti",
+      "iv": 0.0691,
+      "strength": "weak"
+    },
+    {
+      "feature": "annual_inc",
+      "iv": 0.0613,
+      "strength": "weak"
+    },
+    {
+      "feature": "verification_status",
+      "iv": 0.0251,
+      "strength": "weak"
+    },
+    {
+      "feature": "loan_amnt",
+      "iv": 0.0224,
+      "strength": "weak"
+    },
+    {
+      "feature": "purpose",
+      "iv": 0.0185,
+      "strength": "useless"
+    },
+    {
+      "feature": "home_ownership",
+      "iv": 0.0173,
+      "strength": "useless"
+    },
+    {
+      "feature": "total_acc",
+      "iv": 0.0126,
+      "strength": "useless"
+    },
+    {
+      "feature": "emp_length",
+      "iv": 0.0094,
+      "strength": "useless"
+    },
+    {
+      "feature": "longest_credit_length",
+      "iv": 0.0062,
+      "strength": "useless"
+    },
+    {
+      "feature": "delinq_2yrs",
+      "iv": 0.0008,
+      "strength": "useless"
+    }
+  ],
+  "scorecard_features": [
+    "loan_to_income",
+    "term",
+    "revol_util",
+    "dti",
+    "annual_inc",
+    "verification_status",
+    "loan_amnt"
+  ],
+  "dataset": {
+    "name": "lending_club",
+    "title": "Lending Club consumer loans (2007-2011, 163,987 real loans)",
+    "rows": 163987,
+    "bad_rate": 0.183
+  },
+  "shap_importance": {
+    "revol_util": 0.2521,
+    "term": 0.2453,
+    "loan_to_income": 0.1743,
+    "annual_inc": 0.1726,
+    "dti": 0.1472,
+    "purpose": 0.1241,
+    "home_ownership": 0.0837,
+    "longest_credit_length": 0.0574,
+    "delinq_2yrs": 0.0462,
+    "total_acc": 0.0452,
+    "loan_amnt": 0.0397,
+    "emp_length": 0.0386,
+    "verification_status": 0.0113
+  },
+  "agreement_rate": 0.8725,
+  "example_notices": [
+    {
+      "id": 116979,
+      "decision": "DECLINE",
+      "pd": 0.23181082888015925,
+      "score": 515.0,
+      "shap_reasons": [
+        "loan_to_income",
+        "annual_inc",
+        "delinq_2yrs",
+        "longest_credit_length"
+      ],
+      "scorecard_reasons": [
+        "annual_inc",
+        "revol_util",
+        "loan_to_income",
+        "dti"
+      ],
+      "notice": "Application 116979\nDecision: DECLINED\nEstimated probability of default: 23.2%   Scorecard points: 515\n\nWe were unable to approve your application. The principal reasons were:\n  1. Loan is large relative to income\n  2. Income level\n  3. Recent missed payments (last 2 years)\n  4. Length of credit history\n\nWhat would most likely change the outcome if you re-apply:\n  - Loan amount: from 20,500 to 14,811\n  - Debt-to-income ratio: from 20.4% to 17.3%\n  - Credit card utilisation: from 62.3% to 23.5%\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 53778,
+      "decision": "DECLINE",
+      "pd": 0.26565863795369216,
+      "score": 514.0,
+      "shap_reasons": [
+        "annual_inc",
+        "loan_to_income",
+        "revol_util",
+        "home_ownership"
+      ],
+      "scorecard_reasons": [
+        "annual_inc",
+        "revol_util",
+        "dti",
+        "loan_to_income"
+      ],
+      "notice": "Application 53778\nDecision: DECLINED\nEstimated probability of default: 26.6%   Scorecard points: 514\n\nWe were unable to approve your application. The principal reasons were:\n  1. Income level\n  2. Loan is large relative to income\n  3. High use of existing credit lines\n  4. Housing status\n\nWhat would most likely change the outcome if you re-apply:\n  - Loan amount: from 7,875 to 6,694\n  - Debt-to-income ratio: from 18.9% to 16.1%\n  - Credit card utilisation: from 76.9% to 24.7%\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 76629,
+      "decision": "DECLINE",
+      "pd": 0.17673738094064997,
+      "score": 530.0,
+      "shap_reasons": [
+        "annual_inc",
+        "revol_util",
+        "total_acc",
+        "verification_status"
+      ],
+      "scorecard_reasons": [
+        "annual_inc",
+        "revol_util",
+        "dti",
+        "verification_status"
+      ],
+      "notice": "Application 76629\nDecision: DECLINED\nEstimated probability of default: 17.7%   Scorecard points: 530\n\nWe were unable to approve your application. The principal reasons were:\n  1. Income level\n  2. High use of existing credit lines\n  3. Number of credit accounts\n  4. Income could not be verified\n\nWhat would most likely change the outcome if you re-apply:\n  - Credit card utilisation: from 58.2% to 42.0%\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 1111,
+      "decision": "DECLINE",
+      "pd": 0.23282209411842075,
+      "score": 524.0,
+      "shap_reasons": [
+        "revol_util",
+        "annual_inc",
+        "home_ownership",
+        "dti"
+      ],
+      "scorecard_reasons": [
+        "annual_inc",
+        "revol_util",
+        "dti",
+        "loan_amnt"
+      ],
+      "notice": "Application 1111\nDecision: DECLINED\nEstimated probability of default: 23.3%   Scorecard points: 524\n\nWe were unable to approve your application. The principal reasons were:\n  1. High use of existing credit lines\n  2. Income level\n  3. Housing status\n  4. High debt-to-income ratio\n\nWhat would most likely change the outcome if you re-apply:\n  - Credit card utilisation: from 75.4% to 24.2%\n\nYou may request a manual review by a credit officer and a copy of the information used in this decision."
+    },
+    {
+      "id": 53520,
+      "decision": "APPROVE",
+      "pd": 0.12902468609813753,
+      "score": 531.0,
+      "shap_reasons": [
+        "revol_util",
+        "loan_to_income",
+        "emp_length",
+        "verification_status"
+      ],
+      "scorecard_reasons": [
+        "revol_util",
+        "annual_inc",
+        "loan_to_income",
+        "loan_amnt"
+      ],
+      "notice": "Application 53520\nDecision: APPROVED\nEstimated probability of default: 12.9%   Scorecard points: 531\n\nMain factors that still added risk (for the credit file):\n  1. High use of existing credit lines\n  2. Loan is large relative to income\n  3. Short employment history\n  4. Income could not be verified"
+    },
+    {
+      "id": 94532,
+      "decision": "APPROVE",
+      "pd": 0.14777764241358413,
+      "score": 536.0,
+      "shap_reasons": [
+        "annual_inc",
+        "loan_to_income",
+        "home_ownership",
+        "longest_credit_length"
+      ],
+      "scorecard_reasons": [
+        "annual_inc",
+        "revol_util",
+        "loan_to_income",
+        "dti"
+      ],
+      "notice": "Application 94532\nDecision: APPROVED\nEstimated probability of default: 14.8%   Scorecard points: 536\n\nMain factors that still added risk (for the credit file):\n  1. Income level\n  2. Loan is large relative to income\n  3. Housing status\n  4. Length of credit history"
+    }
+  ]
+}

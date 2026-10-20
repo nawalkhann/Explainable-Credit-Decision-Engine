@@ -1,0 +1,167 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Explainable Credit Decision Engine</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, a ledger-style figures strip, then evidence sections */
+:root {
+  --bg: #f6f7f5; --surface: #ffffff; --fg: #17201d; --muted: #5c6763; --line: #dfe3e0;
+  --ml: #1f5fbf; --sc: #b86e0a; --act: #8c979a; --ok: #1b7a4b; --flag: #b3261e;
+  --ok-bg: #e3f2e9; --flag-bg: #fbe7e5;
+  --display: "Fraunces", Georgia, serif; --body: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121715; --surface: #1a211e; --fg: #e6ebe8; --muted: #9aa5a0; --line: #2c3632;
+  --ml: #6ea2f0; --sc: #e2a24a; --act: #6b7578; --ok: #5fcf93; --flag: #f08a82;
+  --ok-bg: #173325; --flag-bg: #3a1c1a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121715; --surface: #1a211e; --fg: #e6ebe8; --muted: #9aa5a0; --line: #2c3632;
+  --ml: #6ea2f0; --sc: #e2a24a; --act: #6b7578; --ok: #5fcf93; --flag: #f08a82;
+  --ok-bg: #173325; --flag-bg: #3a1c1a; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 880px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 44px; }
+h1, h2 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+h2 { font-size: 23px; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lede { color: var(--muted); font-size: 17px; }
+header, section { display: grid; gap: 14px; min-width: 0; }
+.figures { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--fg); border-bottom: 1px solid var(--line); }
+.fig { padding: 14px 14px 16px 0; display: grid; gap: 4px; align-content: start; }
+.fig + .fig { padding-left: 14px; border-left: 1px solid var(--line); }
+.fig b { font-family: var(--mono); font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.fig span { font-size: 13px; color: var(--muted); }
+@media (max-width: 640px) { .figures { grid-template-columns: 1fr 1fr; } .fig:nth-child(3) { border-left: 0; padding-left: 0; } .fig:nth-child(n+3) { border-top: 1px solid var(--line); } }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.win { color: var(--ml); font-weight: 600; }
+.key { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); margin-right: 14px; }
+.key i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+.two > div { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.bar-row { display: grid; grid-template-columns: 9.5em 1fr 3.2em; gap: 8px; align-items: center; font-size: 13px; }
+.bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { height: 10px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bar { display: block; height: 100%; }
+.bar.ml, .b-ml { background: var(--ml); fill: var(--ml); }
+.bar.sc { background: var(--sc); }
+.b-act { fill: var(--act); }
+.bar-val { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+svg { width: 100%; height: auto; display: block; max-width: 100%; }
+svg .grid { stroke: var(--line); stroke-width: 1; }
+svg .ax { fill: var(--muted); font-size: 11px; font-family: var(--mono); }
+pre { margin: 0; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--flag); padding: 16px 18px; font-family: var(--mono); font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+.pill { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 99px; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); }
+.pill.flag { background: var(--flag-bg); color: var(--flag); }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 70ch; }
+.note { font-size: 13px; color: var(--muted); }
+code { font-family: var(--mono); font-size: 13px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Loan decisioning · real Lending Club data</div>
+    <h1>Explainable Credit Decision Engine</h1>
+    <p class="lede">A champion scorecard and a challenger ML model scored side by side on 163,987 real consumer loans. Every approve or decline comes with a probability of default, scorecard points, the reasons in plain language and, for declines, what the applicant could change.</p>
+  </header>
+
+  <div class="figures" aria-label="Headline results on 32,798 held-out loans">
+    <div class="fig"><b>+22%</b><span>expected profit vs the scorecard at the same approval rate</span></div>
+    <div class="fig"><b>0.375</b><span>ML Gini, against 0.338 for the scorecard</span></div>
+    <div class="fig"><b>10.2%</b><span>default rate among approved loans, against 11.0%</span></div>
+    <div class="fig"><b>0.0002</b><span>score drift (PSI), train vs test; under 0.1 is stable</span></div>
+  </div>
+
+  <section>
+    <h2>Champion and challenger on the same loans</h2>
+    <p>Both models were trained on 60% of loans, the decline cut-off was set on 20% to maximise expected profit, and the figures below are from the final 20% they never saw.</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th class="num">Scorecard (WoE/IV)</th><th class="num">ML (LightGBM + SHAP)</th></tr></thead>
+      <tbody>
+        <tr><td>AUC</td><td class="num">0.669</td><td class="num win">0.688</td></tr>
+        <tr><td>Gini</td><td class="num">0.338</td><td class="num win">0.375</td></tr>
+        <tr><td>KS</td><td class="num">0.252</td><td class="num win">0.275</td></tr>
+        <tr><td>Approval rate at cut-off</td><td class="num">49.4%</td><td class="num">49.1%</td></tr>
+        <tr><td>Default rate among approved</td><td class="num">11.0%</td><td class="num win">10.2%</td></tr>
+        <tr><td>Expected profit on test loans</td><td class="num">6.46M</td><td class="num win">7.86M</td></tr>
+        <tr><td>Approving every applicant</td><td class="num">-14.29M</td><td class="num">-14.29M</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Profit assumes a repaid loan earns 12% of its amount and a defaulted loan loses 65%. The two models make the same decision on 87% of applications; where they disagree is a natural queue for manual review.</p>
+  </section>
+
+  <section>
+    <h2>What each model looks at</h2>
+    <div class="two">
+      <div><div class="eyebrow">ML model · mean |SHAP|</div><div class="bar-row"><span class="bar-label">Credit card utilisation</span><span class="bar-track"><span class="bar ml" style="width:100.0%"></span></span><span class="bar-val">0.25</span></div><div class="bar-row"><span class="bar-label">Loan term</span><span class="bar-track"><span class="bar ml" style="width:97.3%"></span></span><span class="bar-val">0.25</span></div><div class="bar-row"><span class="bar-label">Loan to income</span><span class="bar-track"><span class="bar ml" style="width:69.1%"></span></span><span class="bar-val">0.17</span></div><div class="bar-row"><span class="bar-label">Annual income</span><span class="bar-track"><span class="bar ml" style="width:68.5%"></span></span><span class="bar-val">0.17</span></div><div class="bar-row"><span class="bar-label">Debt-to-income</span><span class="bar-track"><span class="bar ml" style="width:58.4%"></span></span><span class="bar-val">0.15</span></div><div class="bar-row"><span class="bar-label">Loan purpose</span><span class="bar-track"><span class="bar ml" style="width:49.2%"></span></span><span class="bar-val">0.12</span></div><div class="bar-row"><span class="bar-label">Housing</span><span class="bar-track"><span class="bar ml" style="width:33.2%"></span></span><span class="bar-val">0.08</span></div><div class="bar-row"><span class="bar-label">Credit history length</span><span class="bar-track"><span class="bar ml" style="width:22.8%"></span></span><span class="bar-val">0.06</span></div></div>
+      <div><div class="eyebrow">Scorecard · Information Value</div><div class="bar-row"><span class="bar-label">Loan to income</span><span class="bar-track"><span class="bar sc" style="width:100.0%"></span></span><span class="bar-val">0.135</span></div><div class="bar-row"><span class="bar-label">Loan term</span><span class="bar-track"><span class="bar sc" style="width:93.8%"></span></span><span class="bar-val">0.127</span></div><div class="bar-row"><span class="bar-label">Credit card utilisation</span><span class="bar-track"><span class="bar sc" style="width:57.7%"></span></span><span class="bar-val">0.078</span></div><div class="bar-row"><span class="bar-label">Debt-to-income</span><span class="bar-track"><span class="bar sc" style="width:51.2%"></span></span><span class="bar-val">0.069</span></div><div class="bar-row"><span class="bar-label">Annual income</span><span class="bar-track"><span class="bar sc" style="width:45.4%"></span></span><span class="bar-val">0.061</span></div><div class="bar-row"><span class="bar-label">Income verified</span><span class="bar-track"><span class="bar sc" style="width:18.6%"></span></span><span class="bar-val">0.025</span></div><div class="bar-row"><span class="bar-label">Loan amount</span><span class="bar-track"><span class="bar sc" style="width:16.6%"></span></span><span class="bar-val">0.022</span></div><div class="bar-row"><span class="bar-label">Loan purpose</span><span class="bar-track"><span class="bar sc" style="width:13.7%"></span></span><span class="bar-val">0.018</span></div></div>
+    </div>
+    <p class="note">Lending Club's own interest rate is left out on purpose: it is the lender's existing risk price, so using it would copy their model. State of residence is left out as a possible proxy for protected groups.</p>
+  </section>
+
+  <section>
+    <h2>A decline that explains itself</h2>
+    <p>A real declined application from the test set. Reasons come from SHAP; the path to approval is a search over the fields an applicant can actually change.</p>
+    <pre>Application 116979
+Decision: DECLINED
+Estimated probability of default: 23.2%   Scorecard points: 515
+
+We were unable to approve your application. The principal reasons were:
+  1. Loan is large relative to income
+  2. Income level
+  3. Recent missed payments (last 2 years)
+  4. Length of credit history
+
+What would most likely change the outcome if you re-apply:
+  - Loan amount: from 20,500 to 14,811
+  - Debt-to-income ratio: from 20.4% to 17.3%
+  - Credit card utilisation: from 62.3% to 23.5%
+
+You may request a manual review by a credit officer and a copy of the information used in this decision.</pre>
+  </section>
+
+  <section>
+    <h2>Predicted risk matches what happened</h2>
+    <div><span class="key"><i style="background:var(--ml)"></i>Predicted default rate</span><span class="key"><i style="background:var(--act)"></i>Actual default rate</span></div>
+    <svg viewBox="0 0 560 240" role="img" aria-label="Predicted versus actual default rate by risk decile"><line x1="44" x2="550" y1="206.0" y2="206.0" class="grid"/><text x="38" y="210.0" class="ax" text-anchor="end">0%</text><line x1="44" x2="550" y1="162.9" y2="162.9" class="grid"/><text x="38" y="166.9" class="ax" text-anchor="end">10%</text><line x1="44" x2="550" y1="119.8" y2="119.8" class="grid"/><text x="38" y="123.8" class="ax" text-anchor="end">20%</text><line x1="44" x2="550" y1="76.7" y2="76.7" class="grid"/><text x="38" y="80.7" class="ax" text-anchor="end">30%</text><line x1="44" x2="550" y1="33.6" y2="33.6" class="grid"/><text x="38" y="37.6" class="ax" text-anchor="end">40%</text><rect x="51.6" y="183.1" width="16.7" height="22.9" class="b-ml"><title>Decile 1.0: predicted 5.3%</title></rect><rect x="70.3" y="181.9" width="16.7" height="24.1" class="b-act"><title>Decile 1.0: actual 5.6%</title></rect><text x="68.3" y="222" class="ax" text-anchor="middle">1</text><rect x="102.2" y="168.5" width="16.7" height="37.5" class="b-ml"><title>Decile 2.0: predicted 8.7%</title></rect><rect x="120.9" y="171.8" width="16.7" height="34.2" class="b-act"><title>Decile 2.0: actual 7.9%</title></rect><text x="118.9" y="222" class="ax" text-anchor="middle">2</text><rect x="152.8" y="158.8" width="16.7" height="47.2" class="b-ml"><title>Decile 3.0: predicted 10.9%</title></rect><rect x="171.5" y="159.5" width="16.7" height="46.5" class="b-act"><title>Decile 3.0: actual 10.8%</title></rect><text x="169.5" y="222" class="ax" text-anchor="middle">3</text><rect x="203.4" y="150.0" width="16.7" height="56.0" class="b-ml"><title>Decile 4.0: predicted 13.0%</title></rect><rect x="222.1" y="151.6" width="16.7" height="54.4" class="b-act"><title>Decile 4.0: actual 12.6%</title></rect><text x="220.1" y="222" class="ax" text-anchor="middle">4</text><rect x="254.0" y="140.8" width="16.7" height="65.2" class="b-ml"><title>Decile 5.0: predicted 15.1%</title></rect><rect x="272.7" y="142.5" width="16.7" height="63.5" class="b-act"><title>Decile 5.0: actual 14.7%</title></rect><text x="270.7" y="222" class="ax" text-anchor="middle">5</text><rect x="304.6" y="131.0" width="16.7" height="75.0" class="b-ml"><title>Decile 6.0: predicted 17.4%</title></rect><rect x="323.3" y="130.8" width="16.7" height="75.2" class="b-act"><title>Decile 6.0: actual 17.4%</title></rect><text x="321.3" y="222" class="ax" text-anchor="middle">6</text><rect x="355.2" y="119.7" width="16.7" height="86.3" class="b-ml"><title>Decile 7.0: predicted 20.0%</title></rect><rect x="373.9" y="117.0" width="16.7" height="89.0" class="b-act"><title>Decile 7.0: actual 20.6%</title></rect><text x="371.9" y="222" class="ax" text-anchor="middle">7</text><rect x="405.8" y="105.6" width="16.7" height="100.4" class="b-ml"><title>Decile 8.0: predicted 23.3%</title></rect><rect x="424.5" y="99.7" width="16.7" height="106.3" class="b-act"><title>Decile 8.0: actual 24.7%</title></rect><text x="422.5" y="222" class="ax" text-anchor="middle">8</text><rect x="456.4" y="84.5" width="16.7" height="121.5" class="b-ml"><title>Decile 9.0: predicted 28.2%</title></rect><rect x="475.1" y="82.4" width="16.7" height="123.6" class="b-act"><title>Decile 9.0: actual 28.7%</title></rect><text x="473.1" y="222" class="ax" text-anchor="middle">9</text><rect x="507.0" y="31.0" width="16.7" height="175.0" class="b-ml"><title>Decile 10.0: predicted 40.6%</title></rect><rect x="525.7" y="33.7" width="16.7" height="172.3" class="b-act"><title>Decile 10.0: actual 40.0%</title></rect><text x="523.7" y="222" class="ax" text-anchor="middle">10</text><text x="302.0" y="238" class="ax" text-anchor="middle">Risk decile (1 = safest)</text></svg>
+    <p class="note">In every decile the predicted rate is within 1.4 points of the actual rate, so the probabilities can be used directly for pricing and provisioning.</p>
+  </section>
+
+  <section>
+    <h2>Fairness audit</h2>
+    <p>Run on the German credit data (1,000 real loans), which records sex, age and foreign-worker status. These fields are never model inputs; they are used only to check outcomes against the four-fifths rule.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Attribute</th><th>Group</th><th class="num">Test loans</th><th class="num">Approval rate</th><th class="num">Impact ratio</th><th>Four-fifths rule</th></tr></thead>
+      <tbody><tr><td>sex</td><td>female</td><td class="num">61</td><td class="num">31.1%</td><td class="num">1.00</td><td><span class="pill ok">Pass</span></td></tr><tr><td>sex</td><td>male</td><td class="num">139</td><td class="num">30.9%</td><td class="num">0.99</td><td><span class="pill ok">Pass</span></td></tr><tr><td>age group</td><td>25 plus</td><td class="num">156</td><td class="num">33.3%</td><td class="num">1.00</td><td><span class="pill ok">Pass</span></td></tr><tr><td>age group</td><td>under 25</td><td class="num">44</td><td class="num">22.7%</td><td class="num">0.68</td><td><span class="pill flag">Review</span></td></tr><tr><td>foreign worker</td><td>no</td><td class="num">6</td><td class="num">33.3%</td><td class="num">1.00</td><td><span class="pill ok">Pass</span></td></tr><tr><td>foreign worker</td><td>yes</td><td class="num">194</td><td class="num">30.9%</td><td class="num">0.93</td><td><span class="pill ok">Pass</span></td></tr></tbody>
+    </table></div>
+    <p class="note">Applicants under 25 are approved at 0.68 times the rate of older applicants and are flagged for review. The test set holds only 200 loans, so this demonstrates the check rather than proving a finding; HMDA mortgage data is the planned source for a full audit.</p>
+  </section>
+
+  <section>
+    <h2>What ships</h2>
+    <ul>
+      <li>A demo app to score one applicant, batch-score a CSV with reason codes, compare models and review fairness and drift.</li>
+      <li>A full scorecard points table (600 points at 50:1 odds, 20 points to double the odds) that a credit officer can read line by line.</li>
+      <li>Model-risk evidence: AUC, Gini, KS, calibration by decile, PSI, IV strength labels and the fairness audit.</li>
+      <li>A data adapter pattern: Home Credit, Freddie Mac, HMDA or a bank's own extract plug in with one loader.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Known limits</h2>
+    <ul>
+      <li>This Lending Club extract has no application date, so the test split is random rather than out-of-time. Freddie Mac data would allow a true out-of-time test.</li>
+      <li>Scorecard bins are quantile-based; production bins would also be forced to rise or fall steadily and be signed off by a credit officer.</li>
+      <li>Profit depends on the stated margin and loss assumptions, and reason wording needs compliance review before customer use.</li>
+    </ul>
+  </section>
+</div>
+
+</body></html>
